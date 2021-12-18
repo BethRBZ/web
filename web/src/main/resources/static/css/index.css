@@ -1,8 +1,12 @@
 html {
-    background-color: azure;
+    background-color: white;
 }
 
 table td,
 table th {
     border: 1px solid black;
+}
+.price p{
+    display: inline-block;
+    font-weight: bold;
 }

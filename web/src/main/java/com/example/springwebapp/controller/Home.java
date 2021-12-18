@@ -5,7 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,21 +21,18 @@ import java.util.Date;
 
 @Controller
 public class Home {
-
     @RequestMapping("/")
-    public String home() {
-        return "index";
-    }
-
-    @RequestMapping("/home-with-session")
-    public String homeWithSession(Model model, HttpSession session) {
+    public String homeWithSession(Model model, HttpSession session, HttpServletRequest req) throws UnsupportedEncodingException {
+        Cookie[] cookie = req.getCookies();
         String sid = session.getId();
+        String cityValue = cookie[0].getValue();
         model.addAttribute("sid", sid);
 
-        ArrayList<Product> products = new ArrayList<>();
-        products.add(new Product("Old product", 1, new Date()));
-        products.add(new Product("New product", 2, new Date()));
+        Product product = new Product();
+        ArrayList<Product> products = product.getProduct();
         model.addAttribute("products", products);
+        cityValue = URLDecoder.decode(cityValue, StandardCharsets.UTF_8.toString());
+        model.addAttribute("cityCookie", cityValue);
         return "index";
     }
 }
