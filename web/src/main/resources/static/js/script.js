@@ -19,13 +19,8 @@ $(document).ready(function () {
             $.cookie(cookieName, value);
         })
     }
-    /* Сортировка*/
+    /* list*/
     let sortAct = {
-        sortnone() {
-            $.get("/sort/{none}", function (data, status) {
-                $('.main-content').html(data);
-            });
-        },
         ascending() {
             $.get("/sort/{ascending}", function (data, status) {
                 $('.main-content').html(data);
@@ -35,17 +30,11 @@ $(document).ready(function () {
             $.get("/sort/{descending}", function (data, status) {
                 $('.main-content').html(data);
             });
-        },
-        alphabetically() {
-            $.get("/sort/{alphabetically}", function (data, status) {
-                $('.main-content').html(data);
-            });
-        },
+        }
     };
-    /* Клики по сортировке*/
+    /* Cортировки*/
     const sort = document.getElementsByClassName('dropdown-menu')[0];
     if (sort) {
-        console.log(1);
         sort.addEventListener('click', function (event) {
             let li = event.target.closest('a');
             let act = li.dataset.command;
@@ -55,6 +44,30 @@ $(document).ready(function () {
         })
     }
     ;
+    /* Категории*/
+    let categoryAct = {
+        food() {
+            $.get("/category/{food}", function (data, status) {
+                $('.main-content').html(data);
+            });
+        },
+        notFood() {
+            $.get("/category/{notFood}", function (data, status) {
+                $('.main-content').html(data);
+            });
+        },
+    };
+    /* Клики по категории*/
+    const category = document.getElementsByClassName('dropdown-menu')[1];
+    if(category) {
+        category.addEventListener('click', function (event) {
+            let li = event.target.closest('a');
+            let act = li.dataset.command;
+            if (act && categoryAct[act] !== undefined) {
+                categoryAct[act]();
+            }
+        })
+    };
 
 
 });

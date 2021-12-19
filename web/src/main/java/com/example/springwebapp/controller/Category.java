@@ -11,18 +11,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @Controller
-public class Sort {
-    @GetMapping("/sort/{ascending}")
-    public String sortAscending(Model model, HttpSession session) {
+public class Category {
+    @GetMapping("/category/{food}")
+    public String getFood(Model model, HttpSession session) {
         Product product = new Product();
-        ArrayList<Product> products = product.getSort();
+        ArrayList<Product> products = product.getFood();
         model.addAttribute("products", products);
         return "index:: .main-content";
     }
-    @GetMapping("/sort/{descending}")
-    public String sortDescending(Model model, HttpSession session) {
+    @GetMapping("/category/{notFood}")
+    public String getNotFood(Model model, HttpSession session) {
         Product product = new Product();
-        ArrayList<Product> products = product.getSortInv();
+        ArrayList<Product> products = product.getNotFood();
         model.addAttribute("products", products);
         return "index:: .main-content";
     }
