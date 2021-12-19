@@ -6,7 +6,46 @@ table td,
 table th {
     border: 1px solid black;
 }
-.price p{
+
+
+.price p {
     display: inline-block;
     font-weight: bold;
+}
+.btn.btn-secondary.dropdown-toggle, .btn.btn-primary.dropdown-toggle, .btn.btn-success.dropdown-toggle {
+    background: #fff;
+    color: #000;
+    border-color: #f0f0f0 !important;
+    box-shadow: none !important;
+}
+
+.btn.btn-success.dropdown-toggle {
+    background: #fff;
+    color: #000;
+    border-color: #f0f0f0 !important;
+    box-shadow: none !important;
+    margin-right: 35px;
+}
+
+.dropdown-item:active, .dropdown-item:hover {
+    background-color: #FFF0F5;
+    color: #000;
+}
+
+.header {
+    position: relative;
+    padding-top: 40px;
+    padding-bottom: 40px
+}
+
+.category {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+}
+
+.sort {
+    position: absolute;
+    top: 25%;
+    left: 40%;
 }

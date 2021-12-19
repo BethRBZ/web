@@ -19,10 +19,42 @@ $(document).ready(function () {
             $.cookie(cookieName, value);
         })
     }
+    /* Сортировка*/
+    let sortAct = {
+        sortnone() {
+            $.get("/sort/{none}", function (data, status) {
+                $('.main-content').html(data);
+            });
+        },
+        ascending() {
+            $.get("/sort/{ascending}", function (data, status) {
+                $('.main-content').html(data);
+            });
+        },
+        descending() {
+            $.get("/sort/{descending}", function (data, status) {
+                $('.main-content').html(data);
+            });
+        },
+        alphabetically() {
+            $.get("/sort/{alphabetically}", function (data, status) {
+                $('.main-content').html(data);
+            });
+        },
+    };
+    /* Клики по сортировке*/
+    const sort = document.getElementsByClassName('dropdown-menu')[0];
+    if (sort) {
+        console.log(1);
+        sort.addEventListener('click', function (event) {
+            let li = event.target.closest('a');
+            let act = li.dataset.command;
+            if (act && sortAct[act] !== undefined) {
+                sortAct[act]();
+            }
+        })
+    }
+    ;
 
 
-    $('.add-to-cart').click(function () {
-
-
-    })
 });

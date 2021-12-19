@@ -10,11 +10,34 @@
     <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
-<h1>Hello Spring Leaf!</h1>
-<h2 th:text="${sid}"></h2>
-<h2 th:text="${cityCookie}"></h2>
-<img id="basket" src="img/soup.svg">
-<span class="quantity">0</span>
+<div class="header">
+    <div class="dropdown sort">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+            Сортировка
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="#" data-command="sortnone">Без сортировки</a></li>
+            <li><a class="dropdown-item" href="#" data-command="ascending">По возрастанию</a></li>
+            <li><a class="dropdown-item" href="#" data-command="descending">По убыванию</a></li>
+            <li><a class="dropdown-item" href="#" data-command="alphabetically">По алфавиту</a></li>
+        </ul>
+    </div>
+    <div class="dropdown category">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+            Категория
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="#" data-command="none">Без категории</a></li>
+            <li><a class="dropdown-item" href="#" data-command="top">Верх</a></li>
+            <li><a class="dropdown-item" href="#" data-command="bottom">Низ</a></li>
+        </ul>
+    </div>
+    <div class="wrapper">
+        <img id="basket" src="img/soup.svg">
+        <span class="quantity">0</span>
+    </div>
+</div>
+
 <section class="main-content">
     <div class="container">
         <div class="row">

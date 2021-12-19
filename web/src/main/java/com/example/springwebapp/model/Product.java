@@ -111,5 +111,28 @@ public class Product {
         }
         return products;
     }
+    public ArrayList<Product> getSort() {
+        ArrayList<Product> products = new ArrayList<>();
+        Product product;
+        try{
+            connection = DriverManager.getConnection(HOST, userName, password);
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM shop order by price");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String description = rs.getString("description");
+                int price = rs.getInt("price");
+                String img = rs.getString("img");
+                String category = rs.getString("category");
+                product = new Product(id, title, description, price, img, category);
+                products.add(product);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
 
 }
