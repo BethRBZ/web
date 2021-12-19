@@ -1,13 +1,23 @@
 html {
     background-color: white;
 }
-
+#Zak { padding-top: 12px}
+.wrapper {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: -50px;
+    padding-right: 50px;
+}
+.wrapper #basket {
+    width: 70px;
+    height: 70px;
+    padding-right: 10px;
+    cursor: pointer;
+}
 table td,
 table th {
     border: 1px solid black;
 }
-
-
 .price p {
     display: inline-block;
     font-weight: bold;
