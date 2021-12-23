@@ -5,40 +5,40 @@ $(document).ready(function () {
     $(document).on('click', ".cart", function () {
         let id = $(this).data("id");
         let cartData = getCartData() || {}, // получаем данные корзины или создаём новый объект, если данных еще нет
-        title = document.getElementsByClassName('card-title')[id-1].innerText,
+            title = document.getElementsByClassName('card-title')[id-1].innerText,
             price = document.getElementsByClassName('p-price')[id-1].innerText,
             text = document.getElementsByClassName('card-text')[id-1].innerText,
-            img = document.getElementsByClassName('card-img-top')[id-1],
             orderData = getCartData() || {};
-        let b64image = getBase64Image(img);
 
-        if (cartData.hasOwnProperty(id)) { // если такой товар уже в корзине, то добавляем +1 к его количеству
-            cartData[id][5] += 1;
-        } else { // если товара в корзине еще нет, то добавляем в объект
-            cartData[id] = [id, title, price, b64image, text, 1];
-        }
-        setCartData(cartData); //вызов функции записи данных в localStorage
-    });
-    /* Добавление товара в корзину*/
-    $(document).on('click', ".cart", function () {
-        let id = $(this).data("id");
         $.post("/cart", {id: id}, function (data) {
-
         }).done(function (data) {
             $('.quantity').text(data.length);
-        }).fail(function () {
-            alert("failed");
-        })
-    })
+        });
+        if (cartData.hasOwnProperty(id)) { // если такой товар уже в корзине, то добавляем +1 к его количеству
+            cartData[id][4] += 1;
+        } else { // если товара в корзине еще нет, то добавляем в объект
+            cartData[id] = [id, title, price, text, 1];
+        }
+        setCartData(cartData); //вызов функции записи данных в sessionStorage
+    });
     let cookieName = "city";
     let x = $.cookie(cookieName);
     if (!x) {
         $('#chooseCity').modal('show');
         $('#choseCityDropdown a').on('click', function () {
             let value = $(this).text();
-            $.cookie(cookieName, value);
+            $.cookie(cookieName, decodeURI(value));
         })
     }
+    function get_cookie (cookie_name)
+    {
+        let results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+        if ( results )
+            return ( unescape ( results[2] ) );
+        else
+            return null;
+    }
+
     /* list*/
     let sortAct = {
         ascending() {
@@ -88,16 +88,47 @@ $(document).ready(function () {
             }
         })
     };
-    $(document).on('click', "#basket",function () {
+    //переход на страницу корзины
+    $(document).on('click',  "#basket",function () {
         location.replace("http://localhost:8081/cart");
     });
-    // Получить данные
+
+    //увеличение количества товара
+    $(document).on('click', ".btn-pls", function () {
+        let cartData = getCartData();
+        let id = $(this).data("id");
+        if (cartData.hasOwnProperty(id)) { // если такой товар уже в корзине, то добавляем +1 к его количеству
+            cartData[id][4] += 1;
+        }
+        setCartData(cartData); //вызов функции записи данных в sessionStorage
+        openCart();
+    });
+    //уменьшение количества товара
+    $(document).on('click', ".btn-min", function () {
+        let cartData = getCartData();
+        let id = $(this).data("id");
+        if (cartData.hasOwnProperty(id)) { // если такой товар уже в корзине, то убираем -1 к его количеству
+            cartData[id][4] -= 1;
+        }
+        setCartData(cartData); //вызов функции записи данных в sessionStorage
+        openCart();
+    });
+    //удаление товара
+    $(document).on('click', ".close", function () {
+        let cartData = getCartData();
+        let id = $(this).data("id");
+        delete cartData[id];
+        setCartData(cartData);
+        openCart();
+    });
+
+    // Получить данные из SessionStorage
     function getCartData(){
-        return JSON.parse(localStorage.getItem('cart'));
+        return JSON.parse(sessionStorage.getItem('cart'));
     }
-// Записать данные
+// Записать данные в SessionStorage
     function setCartData(o){
-        localStorage.setItem('cart', JSON.stringify(o));
+        sessionStorage.setItem('cart', JSON.stringify(o));
     }
     openCart();
     function openCart(){
@@ -106,14 +137,13 @@ $(document).ready(function () {
             totalItems = '';
         // если что-то в корзине уже есть, начинаем формировать данные для вывода
         if(cartData !== null){
-            totalItems = '<table class="shopping_list"><tr><th style="width:150px"> </th><th style="width:240px"> </th><th style="width:200px"> </th><th> </th><th>  </th></tr>';
+            totalItems = '<table class="shopping_list"><tr><th style="width:240px"> </th><th style="width:200px"> </th><th> </th><th>  </th></tr>';
             for(let items in cartData){
-                totalItems += '<tr>' + '<td> <img class="img-cart" src=data:image/png;base64,' + cartData[items][3] +'>' +'</td>';
                 totalItems += '<td>' + cartData[items][1] + '</td>';
                 totalItems += '<td class="cart-price">' + cartData[items][2] + ' <p> руб.</p></td>';
-                totalItems += '<td> <button class="btn-min" style="margin-right:20px" data-id="'+ cartData[items][0] +'">-</button>' + cartData[items][5]
+                totalItems += '<td> <button class="btn-min" style="margin-right:20px" data-id="'+ cartData[items][0] +'">-</button>' + cartData[items][4]
                     + '<button class="btn-pls" style="margin-left:20px" data-id="'+ cartData[items][0] +'">+</button></td>'+'<td><div class="close" data-id="'+ cartData[items][0] +'"></div></td></tr>';
-                sum += parseInt(cartData[items][2])*parseInt(cartData[items][5]);
+                sum += parseInt(cartData[items][2])*parseInt(cartData[items][4]);
                 let totalSum = '<p> Сумма заказа составляет ' + sum + ' руб</p>';
                 if(cartPay) {
                     cartPay.innerHTML = totalSum;
@@ -125,18 +155,30 @@ $(document).ready(function () {
             }
         }
     }
+    $(document).on('click', ".pay", function () {
+        let data = getCartData();
+        let newJSON = {
 
-
+        };
+        for (let recordId in data) {
+            let record = data[recordId];
+            let newRecord = [];
+            newRecord.push(record[0]);
+            newRecord.push(record[4]);
+            newRecord.push(get_cookie("city"));
+            newJSON[recordId] = newRecord;
+        }
+        $.ajax({
+            url: '/checkout',
+            type: 'POST',
+            data: JSON.stringify(newJSON),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            async: false,
+            success: function(msg) {
+                console.log(msg);
+            }
+        });
+        sessionStorage.clear();
+    });
 });
-function getBase64Image(img) { //функция для преобразования изображения в base64
-    let canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    let ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    let dataURL = canvas.toDataURL("image/png");
-
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-}

@@ -35,4 +35,8 @@ public class Home {
         model.addAttribute("cityCookie", cityValue);
         return "index";
     }
+    @RequestMapping("/cart")
+    public String cart(Model model, HttpSession session) {
+        return "cart";
+    }
 }
